@@ -1,7 +1,8 @@
 1. Starting a new repository
-   # a. Create a repo in github
-   # b. git remote add origin /*Link to github repo*/
-   # c. git pull origin main OR git pull origin master --allow-unrelated-histories
-   # d. git add .
-   # e. git commit -m 'Wip'
-   # f. git push origin main
+   # a. Create a new repository in GitHub
+   # b. Create the README.md file
+   # c. Clone the repo in your local machine
+   # d. MAKE CHANGES / CODE
+   # e. git add .
+   # f. git commit -m 'wip'
+   # g. git push origin 
