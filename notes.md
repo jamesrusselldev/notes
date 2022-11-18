@@ -129,6 +129,16 @@
    #   setNum([newNum, ...num])
    # }
 
+
+   You can duplicate an existing state by spread operator!
+   # const [formData, setFormData] = useState({
+   #   email:'',
+   #   password: ''
+   # })
+
+   DUPLICATE
+   # const formDataCopy = { ...formData }
+
 4. index.js
 
    - This is the React entry point!
@@ -159,6 +169,16 @@
       #     setCount(prevCount => prevCount + 1);
       #  }
 
+   - If you want to have a collection of different state in a single state, like formdata, you can create a state that is an object type.
+
+      # const [formData, setFormData] = useState({
+      #   email: '',
+      #   password: ''
+      # })
+
+   - formData state has 2 objects, email and password, and to use them, simply deconstruct the formData object
+
+      # const {email, password} = formData
 
 9. Hooks - useEffect()
    - replaced 3 lifecycle methods - componentDidMount, componentDidUpdate, componentWillUnmount
@@ -374,3 +394,79 @@
       #          )}
       #     </div>
       #   </div>
+
+
+20. Returns
+      - Returns an Object
+      # const handleChange = (e) => {
+      #   setData((prevData) => ({
+      #     email: e.target.data
+      #     password: e.target.data
+      #  }))
+      # }
+
+      - Retuns JSX
+      # setComponent(() => (
+      #   <AlertComponent alert={alert}/>
+      # ))
+
+      - Retuns value
+      # setComponent(() => {
+      #   const value = //anything
+      #   return value
+      # })
+
+21. Form data
+      - Form data is quite complex to grasp when passing the data as an object. to do this:
+
+      1. Create the form data state as an object based on what form data are needed
+      # const [formData, setFormData] = useState({
+      #   email: '',
+      #   password: ''
+      # })
+
+      2. Deconstruct the formData object  for easier usage
+      # const {email, password} = formData
+
+      3. Structure your form
+      # return (
+      #   <form onSubmit={handleSubmit}>
+      #      <div className="emailFieldContainer">
+      #         <input
+      #            className="email"
+      #            id="email"
+      #            placeholder="Email"
+      #            type="text"
+      #            onChange={handleChange}
+      #            value={email} --> SHOULD COME FROM STATE
+      #         />
+      #       </div>
+      #      <div className="passwordFieldContainer">
+      #         <input
+      #            className="password"
+      #            id="password"
+      #            placeholder="Password"
+      #            type={showPassword ? "text" : "password"}
+      #            onChange={handleChange}
+      #            value={password} --> SHOULD COME FROM STATE
+      #         />
+      #      </div>
+      #   </form>
+      # )
+
+      4. Define the handleChange method to make any changes done on each field the value that is typed, to do that, make the input field listen on the same handleChange method and set the form data via setForm data on the same state signature (object)
+
+      >> REMEMBER: Get the previous state first always.
+
+      # const handleChange = (e) => {
+      #   setFormData((prevState) => ({
+      #     ...prevState,
+
+      >> TO MAP EACH FIELD ON THE STATE, FOLLOW THE FORMAT
+            [e.target.id] --> This is the get the respective ID of the field
+            [e.target.value] --> To map the value typed on each field to the state
+
+      #    [e.target.id]: e.target.value,
+      #   }))   
+      # }
+        
