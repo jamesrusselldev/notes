@@ -128,6 +128,7 @@
       #     return axios.get("http://localhost:4000/superheroes");
       # };
 
+      --> Since the onSuccess and onError methods should be left on its own component, you can pass it as a parameter.
       # export const useSuperheroesData = (onSuccess, onError) => {
       # return useQuery("rq-super-heroes", fetchData, {
       #    enabled: false,
@@ -139,4 +140,13 @@
       #    },
       # });
       # };
+
+      d. In the consuming component.
+         - Import the new hooks
+      # import { useSuperheroesData } from ./../hooks/useSuperheroesData.js
+
+      --> onSuccess and onError are in their own methods.
+      # const { isLoading, data, isError, error, isFetching, refetch } = useSuperheroesData(onSuccess, onError);
+
+
 
