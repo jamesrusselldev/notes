@@ -26,6 +26,13 @@
     #   return axios.get("https://localhost:4000/superheroes") 
     # })
 
+    or 
+
+    # const fethData = axios.get("https://localhost:4000/superheroes");
+    # const { isLoading, data, error, isError, refetch } = useQuery('my-query', fetchData, {
+    #   enabled: true
+    # });
+
     NOTE: data contains the entire data of the query, so to go through the data, use data.data
 
 5. useQuery hook can be deonctructed with the following information.
@@ -35,6 +42,7 @@
       c. isError - has error flag
       d. error - error object itself { errorMsg, errorCode }
       e. isFetching - status flag of the fetching mechanism
+      f. refetch - to initiate the entire fetching again
 
    # const { isLoading, data, isError, error } = useQuery('super-heroes', () => {
    #    return axios.get("http://localhost:4000/superheroes");
@@ -46,7 +54,7 @@
 
 7. React query by nature has cached data to avoid continuous loading and refetching. 
    --> Setting cacheTime and staleTime would reduce loading / fetching time. This increase performance greatly. 
-   --> you can use staleTime property.
+   --> you can use staleTime property / query will be fetched in the background.
 
 8. Other configurations (3rd parameter in useQuery)
    #   cacheTime
@@ -57,7 +65,7 @@
    #   refetchOnWindowFocus: true, 
       -->The refetch will be fired on the component is focused.
 
-   # refetchInterval: false || 2000
+   # POLLING DATA:  refetchInterval: false || 2000
       --> The refetch will be executed every 2 seconds. Happens only on window focus.
 
    # refetchIntervalInBackground: true
@@ -77,27 +85,26 @@
       # <button onClick={refetch}>Fetch Data </button>
 
 10. Configuring side effects after successful or errored query.
-   a. Create 2 methods that will be called on success or on failure.
+      a. Create 2 methods that will be called on success or on failure.
+      # const onSuccess = () => {
+      #    console.log("Side effect after data fetching")
+      # }
 
-   # const onSuccess = () => {
-   #    console.log("Side effect after data fetching")
-   # }
+      # const onError = () => {
+      #    console.log("Side effect after error")
+      # }
 
-   # const onError = () => {
-   #    console.log("Side effect after error")
-   # }
-
-   b. On the extra configuration of react query, add the onSuccess and onError confugrations.
-   #   const {isLoading, data, isError, error, isFetching, refetch} = useQuery('rq-super-heroes', fetchData, 
-   #   {
-   #      enabled: false,
-   #      onSuccess: onSuccess,
-   #      onError: onError
-   #    });
+      b. On the extra configuration of react query, add the onSuccess and onError confugrations.
+      #   const {isLoading, data, isError, error, isFetching, refetch} = useQuery('rq-super-heroes', fetchData, 
+      #   {
+      #      enabled: false,
+      #      onSuccess: onSuccess,
+      #      onError: onError
+      #    });
 
 
 11. Data Transformation
-      --> add the configuration select
+      --> add the configuration 'select'
       select automatically accepts the data fetched (response) as an argument.
      # {
      #   enabled: true,
@@ -149,4 +156,52 @@
       # const { isLoading, data, isError, error, isFetching, refetch } = useSuperheroesData(onSuccess, onError);
 
 
+13. Query by ID
+      --> When querying by ID, the useQuery hooks accepts 2 parameters,
+      1. array of 2 data: query name, and id parameter.
+      2. fetch method.
 
+      # const fetchHero = ({queryKey}) => {
+      #    const heroID = queryKey[1];
+      #    return axios.get(`http://localhost:4000/superheroes/${heroID}`);
+      # }
+
+      # export const useFetchHeroById = (heroID) => {
+      #    return useQuery(['super-hero, heroID], fetchHero);
+      # }
+
+      --> on the rendering component.
+         a. to use the heroID parameter (or any), use useParams() hook.
+
+         # const { heroID } = useParams();
+         # const { isLoading, data, error, isError } = useFetchHeroById(heroID)
+
+         # return (
+         #   <div>
+         #      <h1>{data?.data.heroID}</h1>
+         #      <p>{data?.data.heroName}</p>
+         #      <p>A.K.A</p>
+         #      <p>{data?.data.alterego}</p>
+         #   </div>
+         # )
+
+      --> NOTE: Each query hooks requires its own data fetcher method.
+      --> useParams can get parameters from URL in deconstructed manner
+         # https://localhost:4000/rq-super-heroes/:heroID
+
+         In consuming component:
+         const { heroID } = useParams();
+         const { isLoading, data, isError, erro } = useSuperhero(heroID);
+
+14. Pallel Queries
+      --> Are nothing more than just numerous queries being executed at the same time.
+      # const fetchSuperheroes = () => {
+      #   return axios.get('http://localhost:4000/superheroes');
+      # }
+
+      # const fetchFriends = () => {
+      #   return axios.get('http://localhost:4000/friends');
+      # }
+   
+      # const { data: superHeroes  } = useQuery('super-heroes', fetchSuperheroes);
+      # const { data: friends} = useQuery('friends', fetchFriends);
