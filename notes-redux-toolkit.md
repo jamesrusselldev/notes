@@ -275,3 +275,30 @@
     #    }
     # })
 
+
+8. REDUX TOOLKIT - Connecting to apps
+    --> On index.js or app.js, simply import Provider component from react-redix and wrap the app in Provider component, pass the 'store' component to the store prop of the provider.
+
+    # import store from './app/store'
+
+    # <Provider store={store}>
+    #    <App/>
+    # </Provider>
+
+9. REDUX TOOLKIT - Getting state data from slice with useSelector()
+    --> Now that the redux store is provided all throughout the application via Prodiver component with the store as its store prop value, we can now access the states of the slice via useSelector
+
+    --> useSelector() hooks accepts a function as a parameter. The function takes the state as the parameter, and access the slice key in the store, in this case, we are accessing the cookie key, and its state.
+
+    > state.cookie.numOfCookies - cookie (is the key in the store, numOfCookies is the state name in the cookieSlice)
+
+    # import { useSelector } from 'react-redux'
+
+    # function cookieView() {
+    # const numOfCookies = useSelector((state) => state.cookies.numOfCookies)  
+    #    return (
+    #        <div>
+    #            <h2> Number of Cookies: { numOfCookies } </h2>
+    #        </div>
+    #    )
+    # }
