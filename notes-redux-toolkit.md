@@ -131,6 +131,19 @@
     #    draft.address.street = action.payload
     # })
 
+
+//////////////////////////////////////////////////////////////////////////////////
+
+Setting up your Redux Toolkit Project
+5.  Folder Structure
+        a. Create app folder, and inside it, add store.js
+        b. Create features folder
+        c. For each feature, add a slice (cake/cakeSlice.js)
+        d. Create the store.
+        e. Wrap the <App/> in <Provider> component from react-redux and pass the store as the value for store prop of Provider component.
+
+//////////////////////////////////////////////////////////////////////////////////
+
 5. REDUX TOOLKIT
     > Redux folder structure
       - index.js
@@ -167,6 +180,7 @@
     #    }
     # })
     
+    --> ALWAYS EXPORT THE ACTIONS, AND REDUCERS !!!!
     d. Export the slice reducer and actions
     # export default cakeSlice 
     OR

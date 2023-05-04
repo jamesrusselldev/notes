@@ -417,6 +417,7 @@
       # })
 
 21. Form data
+
       - Form data is quite complex to grasp when passing the data as an object. to do this:
 
       1. Create the form data state as an object based on what form data are needed
@@ -469,4 +470,11 @@
       #    [e.target.id]: e.target.value,
       #   }))   
       # }
-        
+
+22. .map()
+    --> Iterates on an ARRAY ONLY.
+    --> To make it nullable, use a model or add ? on the data superset first before performing the iteration.
+
+    # {data?.data.map((hero) => {
+    #      return <p key={hero.id}>{hero.name}</p>;
+    # })}
