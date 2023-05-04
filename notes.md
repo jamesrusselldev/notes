@@ -55,6 +55,15 @@
    #   editMode: true
    # })
 
+
+   // UNUSED PARAMETERS BUT IS REQUIRED IN THE METHOD CALL
+   - add _ in the argument
+   _data, _name, _context are not used.
+
+   # const passData = (_data, _name_, _context, callBack) => {
+   #
+   # }
+
 1. Components is the main part of React.
    Facebook, Now META - 2013 - React 18.2.0 latest stable version
 

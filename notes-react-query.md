@@ -205,3 +205,88 @@
    
       # const { data: superHeroes  } = useQuery('super-heroes', fetchSuperheroes);
       # const { data: friends} = useQuery('friends', fetchFriends);
+
+15. Mutation
+      --> useMutation from react-query
+      --> useMutation 1 parameter - the method posts the data ato the backend ; 
+
+      # export const useAddSuperHeroData = () => {
+      #   return useMutation(addSuperHero)
+      # }
+
+      --> The mutation function accepts 2 parameters, 
+         a. the endpoint where the data will be posted.
+         b. the parameter that will be pushed (ex. hero)
+
+      # const addSuperHero = (hero) => {
+      #   return axios.post("http://localhost:4000/superheroes", hero);
+      # }
+
+      in the consuming component, call the useAddSuperHeroData hook and deconstruct it with the variables such as:
+
+      # const { mutate } = useSuperHeroData();
+
+      ----------------------------------------------------------------
+      To initiate refetch after the post method, use query invalidation.
+      --> Query Invalidation will check if the query is updated, and if not, will perform the refetch.
+
+      In the custom post hook, add second parameter in the useMutation hook, that is a function that has onSuccess method, and it will return the queryClient's invalidateQueries method with the parameter of the SAME QUERY NAME the gets the data.
+
+      a. Add useQueryClient from react-query
+
+      # const useAddSuperHeroData = () => {
+      #    return useMutation(addSuperHero, {
+      #      onSuccess: () => {
+      #         queryClient.invalidateQueries('super-hero');
+      #      }
+      #   })
+      # }
+      ______________________________________________________________
+      IMPROVEMENT:
+
+      addSuperHero data ACTUALLY CREATES THE NEW DATA BEING ADDED, therefore we can use that to save another network call. to do that
+
+      # const useAddSuperHeroData = () => {
+      #   return useMutation(addSuperHero, {
+      #      onSuccess: () => {
+      #         queryClient.setQueryData(data, (oldData) => {
+      #            return {
+      #               ...oldData,
+      #               data: [...oldData.data, data.data]
+      #            }
+      #         })
+      #      }
+      #   });
+      # }
+
+      'oldData' refers to the old data before the query succeeded. 
+
+
+
+16. Optimistic Update
+      --> Done under the assumption that everything goes right.
+      It uses 3 callback functions inside the useMutation hook called onMutate, onError, onSettled
+
+      # const addSuperHeroData = () => {
+      #   const queryClient = useQueryClient();
+      #   return useMutation(addSuperHero, {
+      #      onMutate: async (newHero) => {
+      #         await queryClient.cancelQueries('super-hero');
+      #         const previousQueryData = queryClient.getQueryData('super-heroes');
+      #         queryClient.setQueryData('super-heroes', (oldQueryData) => {
+      #            ...oldQueryData,
+      #            data: [...oldQueryData.data, {
+      #               ...oldQueryData.data?.data.length + 1, newHero
+      #            }]
+      #         });
+      #         return previousQueryData,
+      #      },
+
+      #      onError: (_error, _hero, context) => {
+      #         queryClient.setQueryData('super-heroes', previouseQueryData)
+      #      },
+      #      onSettle: () => {
+      #         queryClient.invalidateQueries('super-heroes')
+      #      },
+      #   });
+      # }
